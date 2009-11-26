@@ -48,10 +48,6 @@ const int TCOD_TECHVERSION = 0x01040202;
  utility macros
  ******************************************/
 version (D_Version2) {
-    /* 
-     * Fun fact: the argument to a string mixin must a string literal. 
-     * Not a string type, but a literal.  
-     */
     mixin("
     pure T MAX(T)(T a, T b) { return (a < b) ? b : a; }
     pure T MIN(T)(T a, T b) { return (a > b) ? b : a; }
