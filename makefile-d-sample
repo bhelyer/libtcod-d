@@ -1,11 +1,8 @@
 DMD=dmd
 DFLAGS=-g -debug -w -unittest
-DLDFLAGS=-L-L. -L-ltcod -of$(EXE)
+DLDFLAGS=-of$(EXE) -L-ldl 
 EXE=samples_d
-LIBSRC=tcod/base.d tcod/color.d tcod/heightmap.d tcod/list.d tcod/noise.d \
-       tcod/sys.d tcod/bresenham.d tcod/console.d tcod/image.d tcod/mersenne.d \
-       tcod/parser.d tcod/tree.d tcod/bsp.d tcod/fov.d tcod/lex.d tcod/mouse.d \
-       tcod/path.d tcod/zip.d
+LIBSRC=tcod/base.d tcod/types.d tcod/functions.d
 
 $(EXE) : samples_d.d $(LIBSRC)
 	$(DMD) samples_d.d $(LIBSRC) $(DFLAGS) $(DLDFLAGS)

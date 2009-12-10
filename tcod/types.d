@@ -85,32 +85,32 @@ enum {
   const TCOD_color_t TCOD_dark_pink = TCOD_color_t(127, 0, 63);
 
 // darker colors
-  const TCOD_color_t TCOD_darker_red;
-  const TCOD_color_t TCOD_darker_orange;
-  const TCOD_color_t TCOD_darker_yellow;
-  const TCOD_color_t TCOD_darker_chartreuse;
-  const TCOD_color_t TCOD_darker_green;
-  const TCOD_color_t TCOD_darker_sea;
-  const TCOD_color_t TCOD_darker_cyan;
-  const TCOD_color_t TCOD_darker_sky;
-  const TCOD_color_t TCOD_darker_blue;
-  const TCOD_color_t TCOD_darker_violet;
-  const TCOD_color_t TCOD_darker_magenta;
-  const TCOD_color_t TCOD_darker_pink;
+  const TCOD_color_t TCOD_darker_red = TCOD_color_t(63, 0, 0);
+  const TCOD_color_t TCOD_darker_orange = TCOD_color_t(63, 31, 0);
+  const TCOD_color_t TCOD_darker_yellow = TCOD_color_t(63, 63, 0);
+  const TCOD_color_t TCOD_darker_chartreuse = TCOD_color_t(31, 63, 0);
+  const TCOD_color_t TCOD_darker_green = TCOD_color_t(0, 63, 0);
+  const TCOD_color_t TCOD_darker_sea = TCOD_color_t(0, 63, 31);
+  const TCOD_color_t TCOD_darker_cyan = TCOD_color_t(0, 63, 63);
+  const TCOD_color_t TCOD_darker_sky = TCOD_color_t(0, 31, 63);
+  const TCOD_color_t TCOD_darker_blue = TCOD_color_t(0, 0, 63);
+  const TCOD_color_t TCOD_darker_violet = TCOD_color_t(31, 0, 63);
+  const TCOD_color_t TCOD_darker_magenta = TCOD_color_t(63, 0, 63);
+  const TCOD_color_t TCOD_darker_pink = TCOD_color_t(63, 0, 31);
 
 // light colors
-  const TCOD_color_t TCOD_light_red;
-  const TCOD_color_t TCOD_light_orange;
-  const TCOD_color_t TCOD_light_yellow;
-  const TCOD_color_t TCOD_light_chartreuse;
-  const TCOD_color_t TCOD_light_green;
-  const TCOD_color_t TCOD_light_sea;
-  const TCOD_color_t TCOD_light_cyan;
-  const TCOD_color_t TCOD_light_sky;
-  const TCOD_color_t TCOD_light_blue;
-  const TCOD_color_t TCOD_light_violet;
-  const TCOD_color_t TCOD_light_magenta;
-  const TCOD_color_t TCOD_light_pink;
+  const TCOD_color_t TCOD_light_red = TCOD_color_t(255, 127, 127);
+  const TCOD_color_t TCOD_light_orange = TCOD_color_t(255, 191, 127);
+  const TCOD_color_t TCOD_light_yellow = TCOD_color_t(255, 255, 127);
+  const TCOD_color_t TCOD_light_chartreuse = TCOD_color_t(191, 255, 127);
+  const TCOD_color_t TCOD_light_green = TCOD_color_t(127, 255, 127);
+  const TCOD_color_t TCOD_light_sea = TCOD_color_t(127, 255, 191);
+  const TCOD_color_t TCOD_light_cyan = TCOD_color_t(127, 255, 255);
+  const TCOD_color_t TCOD_light_sky = TCOD_color_t(127, 191, 255);
+  const TCOD_color_t TCOD_light_blue = TCOD_color_t(127, 127, 255);
+  const TCOD_color_t TCOD_light_violet = TCOD_color_t(191, 127, 255);
+  const TCOD_color_t TCOD_light_magenta = TCOD_color_t(255, 127, 255);
+  const TCOD_color_t TCOD_light_pink = TCOD_color_t(255, 127, 191);
 
 // desaturated
   const TCOD_color_t TCOD_desaturated_red = TCOD_color_t(127, 63, 63);

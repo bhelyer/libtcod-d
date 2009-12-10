@@ -1174,6 +1174,9 @@ class BSPSample : Sample
 
 void main(string[] args)
 {
+    TCOD_D_Init();
+    scope(exit) TCOD_D_Shutdown();
+
     int cur_sample = 0;  // Index of the current sample.
     bool first = true;  // First time we render a sample.
     string font = "fonts/celtic_garamond_10x10_gs_tc.png";

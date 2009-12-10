@@ -1,5 +1,5 @@
 /*
-* libtcod 1.4.1
+* libtcod 1.4.2
 * Copyright (c) 2008,2009 J.C.Wilk
 * All rights reserved.
 *
@@ -74,21 +74,6 @@ version (D_Version2) {
     alias char* charptr;
 }
 
-public import tcod.list;
-public import tcod.color;
-public import tcod.console;
-public import tcod.image;
-public import tcod.sys;
-public import tcod.mersenne;
-public import tcod.mouse;
-public import tcod.bresenham;
-public import tcod.bsp;
-public import tcod.noise;
-public import tcod.fov;
-public import tcod.path;
-public import tcod.lex;
-public import tcod.parser;
-public import tcod.tree;
-public import tcod.heightmap;
-public import tcod.zip;
+public import tcod.types;
+public import tcod.functions;
 
