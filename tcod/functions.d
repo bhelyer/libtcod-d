@@ -343,12 +343,12 @@ extern(D):
 
 private HXModule gTCODhandle;
 
-void TCOD_D_Shutdown()
+static ~this()
 {
     ExeModule_Uninit();
 }
 
-void TCOD_D_Init()
+static this()
 {
     if (ExeModule_Init() < 0) {
         throw new Exception("std.loader.ExeModule_Init has failed to initialise.");
