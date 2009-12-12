@@ -912,45 +912,48 @@ void TCOD_D_Init()
     assert(TCOD_tree_new);
     TCOD_tree_add_son = cast(typeof(TCOD_tree_add_son)) ExeModule_GetSymbol(gTCODhandle, "TCOD_tree_add_son");
     assert(TCOD_tree_add_son);
+
+    // These are unasserted for the moment, because they don't load on Windows.
+    // You should be using std.zlib, instead! (Or the Tango equivalent).
     TCOD_zip_new = cast(typeof(TCOD_zip_new)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_new");
-    assert(TCOD_zip_new);
+    //assert(TCOD_zip_new);
     TCOD_zip_delete = cast(typeof(TCOD_zip_delete)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_delete");
-    assert(TCOD_zip_delete);
+    //assert(TCOD_zip_delete);
     TCOD_zip_put_char = cast(typeof(TCOD_zip_put_char)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_put_char");
-    assert(TCOD_zip_put_char);
+    //assert(TCOD_zip_put_char);
     TCOD_zip_put_int = cast(typeof(TCOD_zip_put_int)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_put_int");
-    assert(TCOD_zip_put_int);
+    //assert(TCOD_zip_put_int);
     TCOD_zip_put_float = cast(typeof(TCOD_zip_put_float)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_put_float");
-    assert(TCOD_zip_put_float);
+    //assert(TCOD_zip_put_float);
     TCOD_zip_put_string = cast(typeof(TCOD_zip_put_string)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_put_string");
-    assert(TCOD_zip_put_string);
+    //assert(TCOD_zip_put_string);
     TCOD_zip_put_color = cast(typeof(TCOD_zip_put_color)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_put_color");
-    assert(TCOD_zip_put_color);
+    //assert(TCOD_zip_put_color);
     TCOD_zip_put_image = cast(typeof(TCOD_zip_put_image)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_put_image");
-    assert(TCOD_zip_put_image);
+    //assert(TCOD_zip_put_image);
     TCOD_zip_put_console = cast(typeof(TCOD_zip_put_console)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_put_console");
-    assert(TCOD_zip_put_console);
+    //assert(TCOD_zip_put_console);
     TCOD_zip_put_data = cast(typeof(TCOD_zip_put_data)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_put_data");
-    assert(TCOD_zip_put_data);
+    //assert(TCOD_zip_put_data);
     TCOD_zip_save_to_file = cast(typeof(TCOD_zip_save_to_file)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_save_to_file");
-    assert(TCOD_zip_save_to_file);
+    //assert(TCOD_zip_save_to_file);
     TCOD_zip_load_from_file = cast(typeof(TCOD_zip_load_from_file)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_load_from_file");
-    assert(TCOD_zip_load_from_file);
+    //assert(TCOD_zip_load_from_file);
     TCOD_zip_get_char = cast(typeof(TCOD_zip_get_char)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_get_char");
-    assert(TCOD_zip_get_char);
+    //assert(TCOD_zip_get_char);
     TCOD_zip_get_int = cast(typeof(TCOD_zip_get_int)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_get_int");
-    assert(TCOD_zip_get_int);
+    //assert(TCOD_zip_get_int);
     TCOD_zip_get_float = cast(typeof(TCOD_zip_get_float)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_get_float");
-    assert(TCOD_zip_get_float);
+    //assert(TCOD_zip_get_float);
     TCOD_zip_get_string = cast(typeof(TCOD_zip_get_string)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_get_string");
-    assert(TCOD_zip_get_string);
+    //assert(TCOD_zip_get_string);
     TCOD_zip_get_color = cast(typeof(TCOD_zip_get_color)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_get_color");
-    assert(TCOD_zip_get_color);
+    //assert(TCOD_zip_get_color);
     TCOD_zip_get_image = cast(typeof(TCOD_zip_get_image)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_get_image");
-    assert(TCOD_zip_get_image);
+    //assert(TCOD_zip_get_image);
     TCOD_zip_get_console = cast(typeof(TCOD_zip_get_console)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_get_console");
-    assert(TCOD_zip_get_console);
+    //assert(TCOD_zip_get_console);
     TCOD_zip_get_data = cast(typeof(TCOD_zip_get_data)) ExeModule_GetSymbol(gTCODhandle, "TCOD_zip_get_data");
-    assert(TCOD_zip_get_data);
+    //assert(TCOD_zip_get_data);
 }
 

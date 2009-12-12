@@ -217,6 +217,7 @@ struct TCOD_key_t {
                   bool, "rctrl", 1,
                   bool, "shift", 1,
                   uint, "padding", 2));
+	version (Windows) int unused;
     } else {
         byte bitfield;
         bool pressed() { return cast(bool)(bitfield & 0x01); }
@@ -225,6 +226,7 @@ struct TCOD_key_t {
         bool ralt() { return cast(bool)(bitfield & 0x08); }
         bool rctrl() { return cast(bool)(bitfield & 0x10); }
         bool shift() { return cast(bool)(bitfield & 0x20); }
+	version (Windows) int unused;
     }
 }
 
@@ -383,6 +385,7 @@ struct TCOD_mouse_t {
                   bool, "mbutton_pressed", 1,
                   bool, "wheel_up", 1,
                   bool, "wheel_down", 1));
+	version (Windows) int unused; 
     } else {
         byte bitfield;
         bool lbutton() { return cast(bool)(bitfield & 0x01); }
@@ -393,6 +396,7 @@ struct TCOD_mouse_t {
         bool mbutton_pressed() { return cast(bool)(bitfield & 0x20); }
         bool wheel_up() { return cast(bool)(bitfield & 0x40); }
         bool wheel_down() { return cast(bool)(bitfield & 0x80); }
+	version (Windows) int unused;
     }
 } 
 
