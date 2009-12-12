@@ -205,28 +205,25 @@ enum : TCOD_keycode_t {
 
 /* key data : special code or character */
 struct TCOD_key_t {
-        TCOD_keycode_t vk; /*  key code */
-        char c; /* character if vk == TCODK_CHAR else 0 */
+    TCOD_keycode_t vk; /*  key code */
+    char c; /* character if vk == TCODK_CHAR else 0 */
 
-    version (D_Version2) {
-        mixin(bitfields!(
-                  bool, "pressed", 1,
-                  bool, "lalt", 1, /* does this correspond to a key press or key release event? */
-                  bool, "lctrl", 1,
-                  bool, "ralt", 1,
-                  bool, "rctrl", 1,
-                  bool, "shift", 1,
-                  uint, "padding", 2));
-	version (Windows) int unused;
+    version (Windows) {
+        uint bitfield;
+        bool pressed() { return cast(bool)(bitfield & 0x00000001); }
+        bool lalt() { return cast(bool)(bitfield &    0x00000002); }
+        bool lctrl() { return cast(bool)(bitfield &   0x00000004); }
+        bool ralt() { return cast(bool)(bitfield &    0x00000008); }
+        bool rctrl() { return cast(bool)(bitfield &   0x00000010); }
+        bool shift() { return cast(bool)(bitfield &   0x00000020); }
     } else {
-        byte bitfield;
+	ubyte bitfield;
         bool pressed() { return cast(bool)(bitfield & 0x01); }
-        bool lalt() { return cast(bool)(bitfield & 0x02); }
-        bool lctrl() { return cast(bool)(bitfield & 0x04); }
-        bool ralt() { return cast(bool)(bitfield & 0x08); }
-        bool rctrl() { return cast(bool)(bitfield & 0x10); }
-        bool shift() { return cast(bool)(bitfield & 0x20); }
-	version (Windows) int unused;
+        bool lalt() { return cast(bool)(bitfield &    0x02); }
+        bool lctrl() { return cast(bool)(bitfield &   0x04); }
+        bool ralt() { return cast(bool)(bitfield &    0x08); }
+        bool rctrl() { return cast(bool)(bitfield &   0x10); }
+        bool shift() { return cast(bool)(bitfield &   0x20); }
     }
 }
 
@@ -375,29 +372,27 @@ struct TCOD_mouse_t {
   int dx,dy; /* movement since last update in pixels */
   int cx,cy; /* cell coordinates in the root console */
   int dcx,dcy; /* movement since last update in console cells */
-    version (D_Version2) {
-        mixin(bitfields!(
-                  bool, "lbutton", 1,
-                  bool, "rbutton", 1,
-                  bool, "mbutton", 1,
-                  bool, "lbutton_pressed", 1,
-                  bool, "rbutton_pressed", 1,
-                  bool, "mbutton_pressed", 1,
-                  bool, "wheel_up", 1,
-                  bool, "wheel_down", 1));
-	version (Windows) int unused; 
-    } else {
-        byte bitfield;
-        bool lbutton() { return cast(bool)(bitfield & 0x01); }
-        bool rbutton() { return cast(bool)(bitfield & 0x02); }
-        bool mbutton() { return cast(bool)(bitfield & 0x04); }
-        bool lbutton_pressed() { return cast(bool)(bitfield & 0x08); }
-        bool rbutton_pressed() { return cast(bool)(bitfield & 0x10); }
-        bool mbutton_pressed() { return cast(bool)(bitfield & 0x20); }
-        bool wheel_up() { return cast(bool)(bitfield & 0x40); }
-        bool wheel_down() { return cast(bool)(bitfield & 0x80); }
-	version (Windows) int unused;
-    }
+  version (Windows) {
+    uint bitfield;
+    bool lbutton() { return cast(bool)(bitfield &         0x00000001); }
+    bool rbutton() { return cast(bool)(bitfield &         0x00000002); }
+    bool mbutton() { return cast(bool)(bitfield &         0x00000004); }
+    bool lbutton_pressed() { return cast(bool)(bitfield & 0x00000008); }
+    bool rbutton_pressed() { return cast(bool)(bitfield & 0x00000010); }
+    bool mbutton_pressed() { return cast(bool)(bitfield & 0x00000020); }
+    bool wheel_up() { return cast(bool)(bitfield &        0x00000040); }
+    bool wheel_down() { return cast(bool)(bitfield &      0x00000080); }
+  } else {
+    ubyte bitfield;
+    bool lbutton() { return cast(bool)(bitfield &         0x01); }
+    bool rbutton() { return cast(bool)(bitfield &         0x02); }
+    bool mbutton() { return cast(bool)(bitfield &         0x04); }
+    bool lbutton_pressed() { return cast(bool)(bitfield & 0x08); }
+    bool rbutton_pressed() { return cast(bool)(bitfield & 0x10); }
+    bool mbutton_pressed() { return cast(bool)(bitfield & 0x20); }
+    bool wheel_up() { return cast(bool)(bitfield &        0x40); }
+    bool wheel_down() { return cast(bool)(bitfield &      0x80); }
+  }
 } 
 
 // --- Bresenham. ---
