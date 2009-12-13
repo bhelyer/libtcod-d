@@ -51,9 +51,13 @@ enum {
 // grey levels
   const TCOD_color_t TCOD_black = TCOD_color_t(0, 0, 0);
   const TCOD_color_t TCOD_darker_grey = TCOD_color_t(31, 31, 31);
+  const TCOD_color_t TCOD_darker_gray = TCOD_color_t(31, 31, 31);
   const TCOD_color_t TCOD_dark_grey = TCOD_color_t(63, 63, 63);
+  const TCOD_color_t TCOD_dark_gray = TCOD_color_t(63, 63, 63);
   const TCOD_color_t TCOD_grey = TCOD_color_t(128, 128, 128);
+  const TCOD_color_t TCOD_gray = TCOD_color_t(128, 128, 128);
   const TCOD_color_t TCOD_light_grey = TCOD_color_t(191, 191, 191);
+  const TCOD_color_t TCOD_light_gray = TCOD_color_t(191, 191, 191);
   const TCOD_color_t TCOD_white = TCOD_color_t(255, 255, 255);
 
 // standard colors
