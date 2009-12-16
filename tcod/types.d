@@ -1,9 +1,5 @@
 module tcod.types;
 
-version (D_Version2) {
-    import std.bitmanip;
-}
-
 import tcod.base;
 
 extern (C):
