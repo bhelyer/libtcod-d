@@ -1308,7 +1308,7 @@ void main(string[] args)
             first = true;
         } else if (key.vk == TCODK_ENTER && key.lalt) {
             // ALT-ENTER: Toggle fullscreen.
-            TCOD_console_set_fullscreen(!TCOD_console_is_fullscreen);
+            TCOD_console_set_fullscreen(!TCOD_console_is_fullscreen());
         } else if (key.vk == TCODK_PRINTSCREEN) {
             // Print screen: Save a screenshot.
             TCOD_sys_save_screenshot(null);
