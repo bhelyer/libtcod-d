@@ -1,0 +1,32 @@
+----------------------------------------
+           libtcod-d 1.4.2-2
+This file last updated: January 23, 2010
+----------------------------------------
+
+libtcod-d is a set of bindings for using the excellent 
+libtcod (http://doryen.eptalys.net/libtcod/) in the D programming language.
+
+The DLL (libtcod.so on Linux, libtcod.dll on Windows) is dynamically loaded
+on start up, not linked at compile time. Note that this means that on Linux
+you must link with libdl by adding -ldl to your linking command to ensure
+that your program runs.
+
+The DMD 1 and 2 are supported, using Phobos. This means Tango/LDC is as of
+yet unsupported, sorry. GDC is not supported, but it may work depending
+on what you do. As far as I can recall, the sample module isn't compiling
+with GDC (even goshawk's branch) at the moment.
+
+To try the sample, run make -f makefile-d-sample on Linux, or run 
+build_sample.bat on Windows.
+
+The bindings are a strict port of the C API, so refer to libtcod 
+documentation for more details. If I can get motivated, an object
+wrapper that would be similar to the C++ API may be forthcoming, so watch
+this space.
+
+For comments and complaints, refer to the Google Code page:
+
+http://code.google.com/p/libtcod-d
+
+or email me at b (dot) helyer (at) gmail (dot) com.
+
