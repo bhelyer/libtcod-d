@@ -1,8 +1,8 @@
 DMD=dmd
 DFLAGS=-g -debug -w -unittest
-DLDFLAGS=-of$(EXE) -L-ldl 
+DLDFLAGS=-of$(EXE) -L-ldl
 EXE=samples_d
-LIBSRC=tcod/base.d tcod/types.d tcod/functions.d
+LIBSRC=tcod/base.d tcod/types.d tcod/functions.d SDL/video.d
 
 $(EXE) : samples_d.d $(LIBSRC)
 	$(DMD) samples_d.d $(LIBSRC) $(DFLAGS) $(DLDFLAGS)

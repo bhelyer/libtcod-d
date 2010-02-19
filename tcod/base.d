@@ -1,5 +1,5 @@
 /*
-* libtcod 1.4.2
+* libtcod 1.5.0
 * Copyright (c) 2008,2009 J.C.Wilk
 * All rights reserved.
 *
@@ -36,13 +36,10 @@ alias ushort uint16;
 alias short int16;
 alias uint uint32;
 alias int int32;
-// int with the same size as a pointer (32 or 64 depending on OS)
-//typedef long intptr;
-//typedef unsigned long uintptr;
 
-const int TCOD_HEXVERSION = 0x010402;
-const string TCOD_STRVERSION = "1.4.2";
-const int TCOD_TECHVERSION = 0x01040202;
+const int TCOD_HEXVERSION = 0x010500;
+const string TCOD_STRVERSION = "1.5.0";
+const int TCOD_TECHVERSION = 0x01050003;
 
 /******************************************
  utility macros
@@ -66,12 +63,16 @@ version (D_Version2) {
 version (D_Version2) {
     /*
      * All code must be valid for any compiler even if it
-     * it won't be getting included. This isn't valid for
-     * DMD 1, hence the mixin.
+     * it won't be getting included. These aren't valid for
+     * DMD 1, hence the mixins.
      */
     mixin("alias const(char)* charptr;");
+    version (Posix) mixin("alias const(dchar)* wchar_tptr;");
+    version (Windows) mixin("alias const(wchar)* wchar_tptr;");
 } else {
     alias char* charptr;
+    version (Posix) alias dchar* wchar_tptr;
+    version (Windows) alias wchar* wchar_tptr;
 }
 
 public import tcod.types;

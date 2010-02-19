@@ -9,8 +9,10 @@ import std.random;
 import std.math;
 import std.conv;
 import std.c.stdlib : malloc, free, exit;
+import std.c.string;
 
 import tcod.base;
+import SDL.video;
 
 version (D_Version2) {
     Mt19937 gen;
@@ -161,7 +163,7 @@ class OffscreenSample : Sample
         screenshot = TCOD_console_new(SAMPLE_SCREEN_WIDTH, SAMPLE_SCREEN_HEIGHT);
 
         TCOD_console_print_frame(secondary, 0, 0, SAMPLE_SCREEN_WIDTH / 2,
-                                 SAMPLE_SCREEN_HEIGHT / 2, false,
+                                 SAMPLE_SCREEN_HEIGHT / 2, false, TCOD_BKGND_SET,
                                  "Offscreen console");
         TCOD_console_print_center_rect(secondary, SAMPLE_SCREEN_WIDTH / 4, 2,
                                        (SAMPLE_SCREEN_WIDTH / 2) - 2,
@@ -182,10 +184,10 @@ class OffscreenSample : Sample
         if (++counter % 20 == 0) {
             // Move the secondary screen every two seconds.
             x += xdir; y += ydir;
-            if (x == SAMPLE_SCREEN_WIDTH / 2) xdir = -1;
-            else if (x == 0) xdir = 1;
-            if (y == SAMPLE_SCREEN_HEIGHT / 2) ydir = -1;
-            else if (y == 0) ydir = 1;
+            if (x == SAMPLE_SCREEN_WIDTH / 2+5) xdir = -1;
+            else if (x == -5) xdir = 1;
+            if (y == SAMPLE_SCREEN_HEIGHT / 2+5) ydir = -1;
+            else if (y == -5) ydir = 1;
         }
         // Restore the initial screen.
         TCOD_console_blit(screenshot, 0, 0, SAMPLE_SCREEN_WIDTH, SAMPLE_SCREEN_HEIGHT,
@@ -323,6 +325,7 @@ class NoiseSample : Sample
     this()
     {
         noise = TCOD_noise_new(2, hurst, lacunarity, null);
+        img = TCOD_image_new(SAMPLE_SCREEN_WIDTH * 2, SAMPLE_SCREEN_HEIGHT * 2);
     }
 
     string name() { return "  Noise              "; }
@@ -342,13 +345,13 @@ class NoiseSample : Sample
         }
 
         // Render the 2D noise function.
-        for (int y = 0; y < SAMPLE_SCREEN_HEIGHT; y++) {
-            for (int x = 0; x < SAMPLE_SCREEN_WIDTH; x++) {
+        for (int y = 0; y < 2 * SAMPLE_SCREEN_HEIGHT; y++) {
+            for (int x = 0; x < 2 * SAMPLE_SCREEN_WIDTH; x++) {
 
                 ubyte c;
                 TCOD_color_t col;
-                f[0] = zoom * x / SAMPLE_SCREEN_WIDTH + dx;
-                f[1] = zoom * y / SAMPLE_SCREEN_HEIGHT + dy;
+                f[0] = zoom * x / (2 * SAMPLE_SCREEN_WIDTH) + dx;
+                f[1] = zoom * y / (2 * SAMPLE_SCREEN_HEIGHT) + dy;
                 float value = 0.0f;
 
                 switch (func) {
@@ -379,9 +382,12 @@ class NoiseSample : Sample
                 // Use a blue-ish colour.
                 col.r = col.g = cast(ubyte)(c / 2);
                 col.b = c;
-                TCOD_console_set_back(sample_console, x, y, col, TCOD_BKGND_SET);
+                TCOD_image_put_pixel(img, x, y, col);
             }
         }
+
+        // Blit the noise image with subcell resolution.
+        TCOD_image_blit_2x(img, sample_console, 0, 0, 0, 0, -1, -1);
 
         free(f);
 
@@ -389,6 +395,15 @@ class NoiseSample : Sample
         TCOD_console_set_background_color(sample_console, TCOD_grey);
         TCOD_console_rect(sample_console, 2, 2, 23,
                           (func <= WAVELET ? 10 : 13), false, TCOD_BKGND_MULTIPLY);
+
+        for (int y = 2; y < 2 + (func <= WAVELET ? 10 : 13); y++) {
+            for (int x = 2; x < 2 + 23; x++) {
+                TCOD_color_t col = TCOD_console_get_fore(sample_console, x, y);
+                col = TCOD_color_multiply(col, TCOD_grey);
+                TCOD_console_set_fore(sample_console, x, y, col);
+            }
+        }
+
         // Draw the text.
         for (int curfunc = PERLIN; curfunc <= TURBULENCE_WAVELET; curfunc++) {
             if (curfunc == func) {
@@ -474,6 +489,7 @@ class NoiseSample : Sample
     float octaves = 4.0f;
     float hurst = TCOD_NOISE_DEFAULT_HURST;
     float lacunarity = TCOD_NOISE_DEFAULT_LACUNARITY;
+    TCOD_image_t img = null;
     float zoom = 3.0f;
 }
 
@@ -661,9 +677,9 @@ class ImageSample : Sample
 {
     this()
     {
-        img = TCOD_image_load("skull.png");
+        img = TCOD_image_load("data/img/skull.png");
         TCOD_image_set_key_color(img, TCOD_black);
-        circle = TCOD_image_load("circle.png");
+        circle = TCOD_image_load("data/img/circle.png");
     }
 
     string name() { return "  Image toolkit      "; }
@@ -787,6 +803,7 @@ class PathSample : Sample
             }
         }
         path = TCOD_path_new_using_map(map, 1.41f);
+        dijkstra = TCOD_dijkstra_new(map, 1.41f);
     }
 
     string name() { return "  Path finding       "; }
@@ -805,7 +822,8 @@ class PathSample : Sample
             TCOD_console_put_char(sample_console, dx, dy, '+', TCOD_BKGND_NONE);
             TCOD_console_put_char(sample_console, px, py, '@', TCOD_BKGND_NONE);
             TCOD_console_print_left(sample_console, 1, 1, TCOD_BKGND_NONE,
-                                    "IJKL / mouse :\nmove destination");
+                                    "IJKL / mouse :\nmove destination\nTAB : A*/dijkstra");
+            TCOD_console_print_left(sample_console, 1, 4, TCOD_BKGND_NONE, "Using : A*");
             for (int y = 0; y < SAMPLE_SCREEN_HEIGHT; y++) {
                 for (int x = 0; x < SAMPLE_SCREEN_WIDTH; x++) {
                     if (smap[y][x] == '=') {
@@ -819,7 +837,23 @@ class PathSample : Sample
         }
         int x, y;
         if (recalculatePath) {
-            TCOD_path_compute(path, px, py, dx, dy);
+            if (usingAstar) { 
+                TCOD_path_compute(path, px, py, dx, dy);
+            } else {
+                dijkstraDist = 0.0f;
+                // Compute the distance grid.
+                TCOD_dijkstra_compute(dijkstra, px, py);
+                for (y = 0; y < SAMPLE_SCREEN_HEIGHT; y++) {
+                    for (x = 0; x < SAMPLE_SCREEN_WIDTH; x++) {
+                        float d = TCOD_dijkstra_get_distance(dijkstra, x, y);
+                        if (d > dijkstraDist) dijkstraDist = d;
+                    }
+                }
+                // Compute the path.
+                TCOD_dijkstra_path_set(dijkstra, dx, dy);
+            }
+            recalculatePath = false;
+            busy = 0.2f;
         }
         // Draw the dungeon.
         for (y = 0; y < SAMPLE_SCREEN_HEIGHT; y++) {
@@ -832,21 +866,46 @@ class PathSample : Sample
         }
 
         // Draw the path.
-        for (int i = 0; i < TCOD_path_size(path); i++) {
-            int tmpx, tmpy;
-            TCOD_path_get(path, i, &tmpx, &tmpy);
-            TCOD_console_set_back(sample_console, tmpx, tmpy, light_ground,
-                                  TCOD_BKGND_SET);
+        if (usingAstar) {
+            for (int i = 0; i < TCOD_path_size(path); i++) {
+                int tmpx, tmpy;
+                TCOD_path_get(path, i, &tmpx, &tmpy);
+                TCOD_console_set_back(sample_console, tmpx, tmpy, light_ground,
+                                      TCOD_BKGND_SET);
+            }
+        } else {
+            for (y = 0; y < SAMPLE_SCREEN_HEIGHT; y++) {
+                for (x = 0; x < SAMPLE_SCREEN_WIDTH; x++) {
+                    bool wall = smap[y][x] == '#';
+                    if (!wall) {
+                        float d = TCOD_dijkstra_get_distance(dijkstra, x, y);
+                        TCOD_console_set_back(sample_console, x, y, TCOD_color_lerp(light_ground, dark_ground, 0.9f * d / dijkstraDist), TCOD_BKGND_SET);
+                    }
+                }
+            }
+            for (int i = 0; i < TCOD_dijkstra_size(dijkstra); i++) {
+                TCOD_dijkstra_get(dijkstra, i, &x, &y);
+                TCOD_console_set_back(sample_console, x, y, light_ground, TCOD_BKGND_SET);
+            }
         }
 
         // Move the creature.
         busy -= TCOD_sys_get_last_frame_length();
         if (busy <= 0.0f) {
             busy += 0.2f;
-            if (!TCOD_path_is_empty(path)) {
-                TCOD_console_put_char(sample_console, px, py, ' ', TCOD_BKGND_NONE);
-                TCOD_path_walk(path, &px, &py, true);
-                TCOD_console_put_char(sample_console, px, py, '@', TCOD_BKGND_NONE);
+            if (usingAstar) {
+                if (!TCOD_path_is_empty(path)) {
+                    TCOD_console_put_char(sample_console, px, py, ' ', TCOD_BKGND_NONE);
+                    TCOD_path_walk(path, &px, &py, true);
+                    TCOD_console_put_char(sample_console, px, py, '@', TCOD_BKGND_NONE);
+                }
+            } else {
+                if (!TCOD_dijkstra_is_empty(dijkstra)) {
+                    TCOD_console_put_char(sample_console, px, py, ' ', TCOD_BKGND_NONE);
+                    TCOD_dijkstra_path_walk(dijkstra, &px, &py);
+                    TCOD_console_put_char(sample_console, px, py, '@', TCOD_BKGND_NONE);
+                    recalculatePath = true;
+                }
             }
         }
 
@@ -879,6 +938,14 @@ class PathSample : Sample
             TCOD_console_put_char(sample_console, dx, dy, oldChar, TCOD_BKGND_NONE);
             dx++;
             destMoved();
+        } else if (key.vk == TCODK_TAB) {
+            usingAstar = !usingAstar;
+            if (usingAstar) {
+                TCOD_console_print_left(sample_console, 1, 4, TCOD_BKGND_NONE, "Using : A*      ");
+            } else {
+                TCOD_console_print_left(sample_console, 1, 4, TCOD_BKGND_NONE, "Using : Dijkstra");
+            }
+            recalculatePath = true;
         }
 
         auto mouse = TCOD_mouse_get_status();
@@ -900,6 +967,9 @@ class PathSample : Sample
     TCOD_color_t dark_ground = {50, 50, 150};
     TCOD_color_t light_ground = {200, 180, 50};
     TCOD_path_t path = null;
+    bool usingAstar = true;
+    float dijkstraDist = 0.0;
+    TCOD_dijkstra_t dijkstra = null;
     bool recalculatePath = false;
     float busy = 0.0f;
     int oldChar = ' ';
@@ -1172,11 +1242,325 @@ class BSPSample : Sample
     ubyte[SAMPLE_SCREEN_WIDTH * SAMPLE_SCREEN_HEIGHT] map = void;
 }
 
+
+// ---------------------
+// Name Generator Sample
+// ---------------------
+
+class NameGeneratorSample : Sample
+{
+    string name() { return "  Name generator     "; }
+
+    this()
+    {
+        TCOD_list_t files;
+        char **it;
+        names = TCOD_list_new();
+        files = TCOD_sys_get_directory_content("data/namegen", "*.cfg");
+        // Parse all the files.
+        for (it = cast(char **) TCOD_list_begin(files); it != cast(char **) TCOD_list_end(files); it++) {
+            char* tmp;
+            tmp = cast(char*) malloc(236);
+            assert(tmp);
+            sprintf(tmp, "data/namegen/%s", *it);
+            TCOD_namegen_parse(tmp, null);
+            free(tmp);
+        }
+        // Get the sets list.
+        sets = TCOD_namegen_get_sets();
+        nbSets = TCOD_list_size(sets);
+    }
+
+    void render(bool first, ref TCOD_key_t key)
+    {
+        if (first) {
+            TCOD_sys_set_fps(30);  // Limited to 30 FPS.
+        }
+
+        while (TCOD_list_size(names) >= 15) {
+            TCOD_list_remove_iterator(names, TCOD_list_begin(names));
+        }
+
+        TCOD_console_clear(sample_console);
+        TCOD_console_set_foreground_color(sample_console, TCOD_white);
+        TCOD_console_print_left(sample_console, 1, 1, TCOD_BKGND_NONE, "%s\n\n+ : next generator\n- : prev generator", cast(charptr)TCOD_list_get(sets, curSet));
+        for (int i = 0; i < TCOD_list_size(names); i++) {
+            charptr name = cast(charptr) TCOD_list_get(names, i);
+            if (strlen(name) < SAMPLE_SCREEN_WIDTH) {
+                TCOD_console_print_right(sample_console, SAMPLE_SCREEN_WIDTH -2, 2 + i, TCOD_BKGND_NONE, name);
+            }
+        }
+
+        delay += TCOD_sys_get_last_frame_length();
+        if (delay >= 0.5f) {
+            delay -= 0.5f;
+            // Add a new name to the list.
+            TCOD_list_push(names, cast(void*) TCOD_namegen_generate(cast(charptr)TCOD_list_get(sets, curSet), true));
+        }
+        if (key.c == '+') {
+            curSet++;
+            if (curSet == nbSets) curSet = 0;
+            TCOD_list_push(names, cast(void*) "======".dup);
+        } else if (key.c == '-') {
+            curSet--;
+            if (curSet < 0) curSet = nbSets - 1;
+            TCOD_list_push(names, cast(void*) "======".dup);
+        }
+    }
+
+    int nbSets;
+    int curSet = 0;
+    float delay = 0.0f;
+    TCOD_list_t sets = null;
+    TCOD_list_t names = null;
+}
+
+
+// -------------------
+// SDL Callback Sample
+// -------------------
+TCOD_noise_t noise = null;
+bool sdl_callback_enabled = false;
+int effectNum = 0;
+float delay = 3.0f;
+
+void burn(SDL_Surface *screen, int samplex, int sampley, int samplew, int sampleh) {
+	int ridx=screen.format.Rshift/8;
+	int gidx=screen.format.Gshift/8;
+	int bidx=screen.format.Bshift/8;
+	int x,y;
+	for (x=samplex; x < samplex + samplew; x ++ ) {
+		Uint8 *p = cast(Uint8 *)screen.pixels + x * screen.format.BytesPerPixel + sampley * screen.pitch;
+		for (y=sampley; y < sampley + sampleh; y ++ ) {
+			int ir=0,ig=0,ib=0;
+			Uint8 *p2 = p + screen.format.BytesPerPixel; // get pixel at x+1,y
+			ir += p2[ridx];
+			ig += p2[gidx];
+			ib += p2[bidx];
+			p2 -= 2*screen.format.BytesPerPixel; // get pixel at x-1,y
+			ir += p2[ridx];
+			ig += p2[gidx];
+			ib += p2[bidx];
+			p2 += screen.format.BytesPerPixel+ screen.pitch; // get pixel at x,y+1
+			ir += p2[ridx];
+			ig += p2[gidx];
+			ib += p2[bidx];
+			p2 -= 2*screen.pitch; // get pixel at x,y-1
+			ir += p2[ridx];
+			ig += p2[gidx];
+			ib += p2[bidx];
+			ir/=4;
+			ig/=4;
+			ib/=4;
+			p[ridx]=cast(ubyte)ir;
+			p[gidx]=cast(ubyte)ig;
+			p[bidx]=cast(ubyte)ib;
+			p += screen.pitch;
+		}
+	}
+}
+
+void explode(SDL_Surface *screen, int samplex, int sampley, int samplew, int sampleh) {
+	int ridx=screen.format.Rshift/8;
+	int gidx=screen.format.Gshift/8;
+	int bidx=screen.format.Bshift/8;
+	int dist=cast(int)(10*(3.0f - delay));
+	int x,y;
+	for (x=samplex; x < samplex + samplew; x ++ ) {
+		Uint8 *p = cast(Uint8 *)screen.pixels + x * screen.format.BytesPerPixel + sampley * screen.pitch;
+		for (y=sampley; y < sampley + sampleh; y ++ ) {
+			int ir=0,ig=0,ib=0,i;
+			for (i=0; i < 3; i++) {
+				int dx = TCOD_random_get_int(null,-dist,dist);
+				int dy = TCOD_random_get_int(null,-dist,dist);
+				Uint8 *p2;
+				p2 = p + dx * screen.format.BytesPerPixel;
+				p2 += dy * screen.pitch;
+				ir += p2[ridx];
+				ig += p2[gidx];
+				ib += p2[bidx];
+			}
+			ir/=3;
+			ig/=3;
+			ib/=3;
+			p[ridx]=cast(ubyte)ir;
+			p[gidx]=cast(ubyte)ig;
+			p[bidx]=cast(ubyte)ib;
+			p += screen.pitch;
+		}
+	}
+}
+
+void blur(SDL_Surface *screen, int samplex, int sampley, int samplew, int sampleh) {
+	// let's blur that sample console
+	float f[3];
+        float n=0.0f;
+	int ridx=screen.format.Rshift/8;
+	int gidx=screen.format.Gshift/8;
+	int bidx=screen.format.Bshift/8;
+	int x,y;
+	f[2]=TCOD_sys_elapsed_seconds();
+	if ( noise == null ) noise=TCOD_noise_new(3, TCOD_NOISE_DEFAULT_HURST, TCOD_NOISE_DEFAULT_LACUNARITY, null);
+	for (x=samplex; x < samplex + samplew; x ++ ) {
+		Uint8 *p = cast(Uint8 *)screen.pixels + x * screen.format.BytesPerPixel + sampley * screen.pitch;
+		f[0]=cast(float)(x)/samplew;
+		for (y=sampley; y < sampley + sampleh; y ++ ) {
+			int ir=0,ig=0,ib=0,dec, count;
+			if ( (y-sampley)%8 == 0 ) {
+				f[1]=cast(float)(y)/sampleh;
+				n=TCOD_noise_fbm_simplex(noise,cast(float*)f,3.0f);
+			}
+			dec = cast(int)(3*(n+1.0f));
+			count=0;
+			switch(dec) {
+				case 4:
+					count += 4;
+					// get pixel at x,y
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p -= 2*screen.format.BytesPerPixel; // get pixel at x+2,y
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p -= 2*screen.pitch; // get pixel at x+2,y+2
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p+= 2*screen.format.BytesPerPixel; // get pixel at x,y+2
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p += 2*screen.pitch;
+				case 3:
+					count += 4;
+					// get pixel at x,y
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p += 2*screen.format.BytesPerPixel; // get pixel at x+2,y
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p += 2*screen.pitch; // get pixel at x+2,y+2
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p-= 2*screen.format.BytesPerPixel; // get pixel at x,y+2
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p -= 2*screen.pitch;
+				case 2:
+					count += 4;
+					// get pixel at x,y
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p -= screen.format.BytesPerPixel; // get pixel at x-1,y
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p -= screen.pitch; // get pixel at x-1,y-1
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p+= screen.format.BytesPerPixel; // get pixel at x,y-1
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p += screen.pitch;
+				case 1:
+					count += 4;
+					// get pixel at x,y
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p += screen.format.BytesPerPixel; // get pixel at x+1,y
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p += screen.pitch; // get pixel at x+1,y+1
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p-= screen.format.BytesPerPixel; // get pixel at x,y+1
+					ir += p[ridx];
+					ig += p[gidx];
+					ib += p[bidx];
+					p -= screen.pitch;
+					ir/=count;
+					ig/=count;
+					ib/=count;
+					p[ridx]=cast(ubyte)ir;
+					p[gidx]=cast(ubyte)ig;
+					p[bidx]=cast(ubyte)ib;
+				break;
+				default:break;
+			}
+			p += screen.pitch;
+		}
+	}
+}
+
+extern(C) void SDL_render(void *sdlSurface) {
+	SDL_Surface *screen = cast(SDL_Surface *)sdlSurface;
+	// now we have almighty access to the screen's precious pixels !!
+	// get the font character size
+	int charw,charh,samplex,sampley;
+	TCOD_sys_get_char_size(&charw,&charh);
+	// compute the sample console position in pixels
+	samplex = SAMPLE_SCREEN_X * charw;
+	sampley = SAMPLE_SCREEN_Y * charh;
+	delay -= TCOD_sys_get_last_frame_length();
+	if ( delay < 0.0f ) {
+		delay = 3.0f;
+		effectNum = (effectNum + 1) % 3;
+		if ( effectNum == 2 ) sdl_callback_enabled=false; // no forced redraw for burn effect
+		else sdl_callback_enabled=true;
+	}
+	switch(effectNum) {
+		case 0 : blur(screen,samplex,sampley,SAMPLE_SCREEN_WIDTH * charw,SAMPLE_SCREEN_HEIGHT * charh); break;
+		case 1 : explode(screen,samplex,sampley,SAMPLE_SCREEN_WIDTH * charw,SAMPLE_SCREEN_HEIGHT * charh); break;
+		case 2 : burn(screen,samplex,sampley,SAMPLE_SCREEN_WIDTH * charw,SAMPLE_SCREEN_HEIGHT * charh); break;
+                default: assert(false);
+	}
+}
+
+
+class SDLCallbackSample : Sample
+{
+    string name() { return "  SDL callback       "; }
+
+    void render(bool first, ref TCOD_key_t key)
+    {
+        if (first) {
+            TCOD_sys_set_fps(30);  // Limited to 30 FPS.
+            // Use noise sample as background. Rendering is done in SampleRenderer.
+            TCOD_console_set_background_color(sample_console, TCOD_light_blue);
+            TCOD_console_set_foreground_color(sample_console, TCOD_white);
+            TCOD_console_clear(sample_console);
+            TCOD_console_print_center_rect(sample_console, SAMPLE_SCREEN_WIDTH / 2, 3, SAMPLE_SCREEN_WIDTH, 0, TCOD_BKGND_NONE,
+                "The SDL callback gives you acce3ss to the screen surface so that you can alter the pixels one by one using the SDL API or any API on top of SDL. SDL is used here to blur the sample console.\n\nHit TAB to enable/disable the callback. While enabled, it will be active on other samples too.");
+        }
+        if (key.vk == TCODK_TAB) {
+            sdl_callback_enabled = !sdl_callback_enabled;
+            if (sdl_callback_enabled) {
+                TCOD_sys_register_SDL_renderer(&SDL_render);
+            } else {
+                TCOD_sys_register_SDL_renderer(null);
+                // We want libtcod to redraw the sample console even if nothing has changed in it.
+                TCOD_console_set_dirty(SAMPLE_SCREEN_X, SAMPLE_SCREEN_Y, SAMPLE_SCREEN_WIDTH, SAMPLE_SCREEN_HEIGHT);
+            }
+        }
+    }
+}
+
 void main(string[] args)
 {
     int cur_sample = 0;  // Index of the current sample.
     bool first = true;  // First time we render a sample.
-    string font = "fonts/celtic_garamond_10x10_gs_tc.png";
+    string font = "data/fonts/consolas10x10_gs_tc.png";
     int font_flags = TCOD_FONT_TYPE_GREYSCALE | TCOD_FONT_LAYOUT_TCOD;
     int font_new_flags = 0;
     int nb_char_horiz = 0, nb_char_vertic = 0;
@@ -1250,7 +1634,7 @@ void main(string[] args)
     sample_console = TCOD_console_new(SAMPLE_SCREEN_WIDTH, SAMPLE_SCREEN_HEIGHT);
     while (!TCOD_console_is_window_closed()) {
         if (!credits_end) {
-            credits_end = TCOD_console_credits_render(60, 42, false);
+            credits_end = TCOD_console_credits_render(60, 43, false);
         }
 
         // Print the list of samples.
@@ -1327,6 +1711,8 @@ void populateSamplesList(out Sample[] samples)
     samples ~= new BSPSample();
     samples ~= new ImageSample();
     samples ~= new MouseSample();
+    samples ~= new NameGeneratorSample();
+    samples ~= new SDLCallbackSample();
 }
 
 /// Print a usage string to stdout.

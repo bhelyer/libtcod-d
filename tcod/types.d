@@ -30,7 +30,7 @@ enum {
 	TCOD_COLOR_VIOLET,
 	TCOD_COLOR_MAGENTA,
 	TCOD_COLOR_PINK,
-};
+}
 
 // color levels
 enum {
@@ -39,7 +39,7 @@ enum {
 	TCOD_COLOR_NORMAL,
 	TCOD_COLOR_DARK,
 	TCOD_COLOR_DARKER,
-};
+}
 
 // color array
   const TCOD_color_t  TCOD_colors[TCOD_COLOR_NB][TCOD_COLOR_LEVELS];
@@ -207,24 +207,12 @@ enum : TCOD_keycode_t {
 struct TCOD_key_t {
     TCOD_keycode_t vk; /*  key code */
     char c; /* character if vk == TCODK_CHAR else 0 */
-
-    version (Windows) {
-        uint bitfield;
-        bool pressed() { return cast(bool)(bitfield & 0x00000001); }
-        bool lalt() { return cast(bool)(bitfield &    0x00000002); }
-        bool lctrl() { return cast(bool)(bitfield &   0x00000004); }
-        bool ralt() { return cast(bool)(bitfield &    0x00000008); }
-        bool rctrl() { return cast(bool)(bitfield &   0x00000010); }
-        bool shift() { return cast(bool)(bitfield &   0x00000020); }
-    } else {
-	ubyte bitfield;
-        bool pressed() { return cast(bool)(bitfield & 0x01); }
-        bool lalt() { return cast(bool)(bitfield &    0x02); }
-        bool lctrl() { return cast(bool)(bitfield &   0x04); }
-        bool ralt() { return cast(bool)(bitfield &    0x08); }
-        bool rctrl() { return cast(bool)(bitfield &   0x10); }
-        bool shift() { return cast(bool)(bitfield &   0x20); }
-    }
+    bool pressed;
+    bool lalt;
+    bool lctrl;
+    bool ralt;
+    bool rctrl;
+    bool shift;
 }
 
 enum {
@@ -282,7 +270,7 @@ enum {
         TCOD_CHAR_SUBP_DIAG=230,
         TCOD_CHAR_SUBP_E=231,
         TCOD_CHAR_SUBP_SW=232,
-};
+}
 
 alias int TCOD_colctrl_t;
 enum : TCOD_colctrl_t {
@@ -341,7 +329,7 @@ version (D_Version2) {
 enum {
         TCOD_KEY_PRESSED=1,
         TCOD_KEY_RELEASED=2,
-};
+}
 
 // custom font flags
 enum {
@@ -350,7 +338,7 @@ enum {
         TCOD_FONT_TYPE_GREYSCALE=4,
         TCOD_FONT_TYPE_GRAYSCALE=4,
         TCOD_FONT_LAYOUT_TCOD=8,
-};
+}
 
 alias void* TCOD_console_t;
 
@@ -361,10 +349,17 @@ alias void* TCOD_image_t;
 alias void* TCOD_thread_t;
 alias void* TCOD_semaphore_t;
 alias void* TCOD_mutex_t;
+alias void* TCOD_cond_t;
 alias void (*SDL_renderer_t) (void* sdl_surface);
 
 // --- Mersenne. ---
 alias void* TCOD_random_t;
+alias int TCOD_random_algo_t;
+enum : TCOD_random_algo_t
+{
+    TCOD_RNG_MT,
+    TCOD_RNG_CMWC,
+}
 
 // --- Mouse. ---
 struct TCOD_mouse_t {
@@ -372,27 +367,14 @@ struct TCOD_mouse_t {
   int dx,dy; /* movement since last update in pixels */
   int cx,cy; /* cell coordinates in the root console */
   int dcx,dcy; /* movement since last update in console cells */
-  version (Windows) {
-    uint bitfield;
-    bool lbutton() { return cast(bool)(bitfield &         0x00000001); }
-    bool rbutton() { return cast(bool)(bitfield &         0x00000002); }
-    bool mbutton() { return cast(bool)(bitfield &         0x00000004); }
-    bool lbutton_pressed() { return cast(bool)(bitfield & 0x00000008); }
-    bool rbutton_pressed() { return cast(bool)(bitfield & 0x00000010); }
-    bool mbutton_pressed() { return cast(bool)(bitfield & 0x00000020); }
-    bool wheel_up() { return cast(bool)(bitfield &        0x00000040); }
-    bool wheel_down() { return cast(bool)(bitfield &      0x00000080); }
-  } else {
-    ubyte bitfield;
-    bool lbutton() { return cast(bool)(bitfield &         0x01); }
-    bool rbutton() { return cast(bool)(bitfield &         0x02); }
-    bool mbutton() { return cast(bool)(bitfield &         0x04); }
-    bool lbutton_pressed() { return cast(bool)(bitfield & 0x08); }
-    bool rbutton_pressed() { return cast(bool)(bitfield & 0x10); }
-    bool mbutton_pressed() { return cast(bool)(bitfield & 0x20); }
-    bool wheel_up() { return cast(bool)(bitfield &        0x40); }
-    bool wheel_down() { return cast(bool)(bitfield &      0x80); }
-  }
+  bool lbutton;
+  bool rbutton;
+  bool mbutton;
+  bool lbutton_pressed;
+  bool rbutton_pressed;
+  bool mbutton_pressed;
+  bool wheel_up;
+  bool wheel_down;
 } 
 
 // --- Bresenham. ---
@@ -461,6 +443,7 @@ TCOD_fov_algorithm_t FOV_PERMISSIVE(int x) { return FOV_PERMISSIVE_0 + x; }
 // --- Path. ---
 alias float (*TCOD_path_func_t)( int xFrom, int yFrom, int xTo, int yTo, void *user_data );
 alias void *TCOD_path_t;
+alias void* TCOD_dijkstra_t;
 
 // --- Lex. ---
 const int TCOD_LEX_FLAG_NOCASE = 1;
@@ -485,7 +468,8 @@ const int TCOD_LEX_KEYWORD_SIZE = 20;
 struct TCOD_lex_t {
 	int file_line, token_type, token_int_val, token_idx;
 	float token_float_val;
-	char tok[512];
+	char *tok;
+        int toklen;
 	char lastStringDelim;
 	char *pos;
 	char *buf;
@@ -634,4 +618,12 @@ struct TCOD_heightmap_t {
 
 // --- Zip. ---
 alias void* TCOD_zip_t;
+
+
+// --- Namegen. ---
+alias void* TCOD_namegen_t;
+
+
+// --- Txtfield. ---
+alias void* TCOD_text_t;
 

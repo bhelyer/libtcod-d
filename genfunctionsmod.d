@@ -55,9 +55,11 @@ void main()
     stdout.writeln("    }\n");
 
     stdout.writeln("    version (Posix) {");
-    stdout.writeln(`        gTCODhandle = ExeModule_Load("./libtcod.so");`);
+    stdout.writeln(`        gTCODhandle = ExeModule_Load("./libtcod_debug.so");`);
+    stdout.writeln(`        if (!gTCODhandle) gTCODhandle = ExeModule_Load("./libtcod.so");`);
     stdout.writeln("    } else {");
-    stdout.writeln(`        gTCODhandle = ExeModule_Load("libtcod.dll");`);
+    stdout.writeln(`        gTCODhandle = ExeModule_Load("libtcod_debug.dll");`);
+    stdout.writeln(`        if (!gTCODhandle) gTCODhandle = ExeModule_Load("libtcod.dll");`);
     stdout.writeln("    }");
     stdout.writeln("    assert(gTCODhandle);\n");
 
