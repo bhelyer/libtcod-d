@@ -11,10 +11,15 @@ on start up, not linked at compile time. Note that this means that on Linux
 you must link with libdl by adding -ldl to your linking command to ensure
 that your program runs.
 
+It searches for libtcod_debug.so, and if it can't find that, then libtcod.so
+on the current path (or dlls if on Windows). The current release build of
+libtcod.so 1.5.0 is lacking the TCOD_text functions, and will fail on
+attempting to load those functions. If you need to use a release build before
+libtcod.so is fixed, remove the asserts for the libtcod_text functions.
+
 The DMD 1 and 2 are supported, using Phobos. This means Tango/LDC is as of
-yet unsupported, sorry. GDC is not supported, but it may work depending
-on what you do. As far as I can recall, the sample module isn't compiling
-with GDC (even goshawk's branch) at the moment.
+yet unsupported, sorry. GDC is not supported, and won't work due to
+the age of the FE.
 
 To try the sample, run make -f makefile-d-sample on Linux, or run 
 build_sample.bat on Windows.
