@@ -1,5 +1,5 @@
 DMD=dmd
-DFLAGS=-g -debug -w -unittest
+DFLAGS=-gc -debug -w -unittest
 DLDFLAGS=-of$(EXE) -L-ldl
 EXE=samples_d
 LIBSRC=tcod/base.d tcod/types.d tcod/functions.d SDL/video.d
