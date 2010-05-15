@@ -19,7 +19,7 @@ void main()
 
     stdout.writeln("import std.loader;\n");
 
-    stdout.writeln("import tcod.base;");
+    stdout.writeln("import tcod.all;");
     stdout.writeln("import tcod.types;\n");
 
     stdout.writeln("version (D_Version2) {");

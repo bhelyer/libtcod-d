@@ -1,6 +1,6 @@
 module tcod.types;
 
-import tcod.base;
+import tcod.all;
 
 extern (C):
 

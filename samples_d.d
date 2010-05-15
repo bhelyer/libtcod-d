@@ -11,7 +11,7 @@ import std.conv;
 import std.c.stdlib : malloc, free, exit;
 import std.c.string;
 
-import tcod.base;
+import tcod.all;
 import SDL.video;
 
 version (D_Version2) {

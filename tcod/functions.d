@@ -3,7 +3,7 @@ module tcod.functions;
 
 import std.loader;
 
-import tcod.base;
+import tcod.all;
 import tcod.types;
 
 version (D_Version2) {
