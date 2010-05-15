@@ -1,10 +1,10 @@
 /// This module has been automatically generated.
-module tcod.functions;
+module c.tcod.functions;
 
 import std.loader;
 
-import tcod.all;
-import tcod.types;
+import c.tcod.all;
+import c.tcod.types;
 
 version (D_Version2) {
     string gshared() { return "__gshared "; }

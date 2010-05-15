@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module tcod.all;
+module c.tcod.all;
 
 extern (C):
 
@@ -75,6 +75,6 @@ version (D_Version2) {
     version (Windows) alias wchar* wchar_tptr;
 }
 
-public import tcod.types;
-public import tcod.functions;
+public import c.tcod.types;
+public import c.tcod.functions;
 

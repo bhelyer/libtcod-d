@@ -15,12 +15,12 @@ import std.string;
 void main()
 {
     stdout.writeln("/// This module has been automatically generated.");
-    stdout.writeln("module tcod.functions;\n");
+    stdout.writeln("module c.tcod.functions;\n");
 
     stdout.writeln("import std.loader;\n");
 
-    stdout.writeln("import tcod.all;");
-    stdout.writeln("import tcod.types;\n");
+    stdout.writeln("import c.tcod.all;");
+    stdout.writeln("import c.tcod.types;\n");
 
     stdout.writeln("version (D_Version2) {");
     stdout.writeln(`    string gshared() { return "__gshared "; }`);
