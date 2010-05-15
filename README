@@ -18,8 +18,8 @@ attempting to load those functions. If you need to use a release build before
 libtcod.so is fixed, remove the asserts for the libtcod_text functions.
 
 The DMD 1 and 2 are supported, using Phobos. This means Tango/LDC is as of
-yet unsupported, sorry. GDC is not supported, and won't work due to
-the age of the FE.
+yet unsupported. I am working on it, however!
+GDC is not supported, and won't work due to the age of the FE.
 
 ATTENTION: There is a bug that occurs when using D2 versions on some
 systems that means any attempt to use the library will result in a
