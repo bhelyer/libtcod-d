@@ -21,6 +21,10 @@ The DMD 1 and 2 are supported, using Phobos. This means Tango/LDC is as of
 yet unsupported, sorry. GDC is not supported, and won't work due to
 the age of the FE.
 
+ATTENTION: There is a bug that occurs when using D2 versions on some
+systems that means any attempt to use the library will result in a
+segfaulting executable. I'm looking into it.
+
 To try the sample, run make -f makefile-d-sample on Linux, or run 
 build_sample.bat on Windows.
 
