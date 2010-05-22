@@ -36,6 +36,7 @@ alias ushort uint16;
 alias short int16;
 alias uint uint32;
 alias int int32;
+version (Tango) alias char[] string;
 
 const int TCOD_HEXVERSION = 0x010500;
 const string TCOD_STRVERSION = "1.5.0";

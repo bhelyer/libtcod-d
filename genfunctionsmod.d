@@ -17,7 +17,9 @@ void main()
     stdout.writeln("/// This module has been automatically generated.");
     stdout.writeln("module c.tcod.functions;\n");
 
-    stdout.writeln("import std.loader;\n");
+    stdout.writeln("version (Tango) {\n    import tango.sys.SharedLib;");
+    stdout.writeln("    import tango.stdc.stringz;");
+    stdout.writeln("} else import std.loader;\n");
 
     stdout.writeln("import c.tcod.all;");
     stdout.writeln("import c.tcod.types;\n");
@@ -25,8 +27,11 @@ void main()
     stdout.writeln("version (D_Version2) {");
     stdout.writeln(`    string gshared() { return "__gshared "; }`);
     stdout.writeln("} else {");
-    stdout.writeln(`    char[] gshared() { return " "; }`);
+    stdout.writeln(`    string gshared() { return " "; }`);
     stdout.writeln("}\n");
+    
+    stdout.writeln("version (Tango) alias SharedLib SharedObject;");
+    stdout.writeln("else alias HXModule SharedObject;\n");
 
     stdout.writeln("extern (C):\n");
 
@@ -44,22 +49,41 @@ void main()
 
     stdout.writeln("extern (D):\n");
     
-    stdout.writeln(`mixin("private " ~ gshared() ~ "HXModule gTCODhandle;");`);
+    stdout.writeln(`mixin("private " ~ gshared() ~ "SharedObject gTCODhandle;");`);
     stdout.writeln();
+    stdout.writeln("private void* getSymbol(string name)");
+    stdout.writeln("{");
+    stdout.writeln("    version (Tango) return gTCODhandle.getSymbol(toStringz(name));");
+    stdout.writeln("    else return ExeModule_GetSymbol(gTCODhandle, name);");
+    stdout.writeln("}");
 
-    stdout.writeln("static ~this()\n{\n    ExeModule_Uninit();\n}\n");
+    stdout.writeln("static ~this()\n{");
+    stdout.writeln("    version (Tango) gTCODhandle.unload();");
+    stdout.writeln("    else ExeModule_Uninit();");
+    stdout.writeln("}\n");
 
     stdout.writeln("static this()\n{");
-    stdout.writeln("    if (ExeModule_Init() < 0) {");
-    stdout.writeln(`        throw new Exception("std.loader.ExeModule_Init has failed to initialise.");`);
+    stdout.writeln("    version (Tango) {");
+    stdout.writeln("    } else {");
+    stdout.writeln("        if (ExeModule_Init() < 0) {");
+    stdout.writeln(`            throw new Exception("std.loader.ExeModule_Init has failed to initialise.");`);
+    stdout.writeln("        }");
     stdout.writeln("    }\n");
 
     stdout.writeln("    version (Posix) {");
-    stdout.writeln(`        gTCODhandle = ExeModule_Load("./libtcod_debug.so");`);
-    stdout.writeln(`        if (!gTCODhandle) gTCODhandle = ExeModule_Load("./libtcod.so");`);
+    stdout.writeln(`        version (Tango) gTCODhandle = SharedLib.load("./libtcod_debug.so");`);
+    stdout.writeln(`        else gTCODhandle = ExeModule_Load("./libtcod_debug.so");`);
+    stdout.writeln(`        if (!gTCODhandle) {`);
+    stdout.writeln(`            version (Tango) gTCODhandle = SharedLib.load("./libtcod.so");`);
+    stdout.writeln(`            else gTCODhandle = ExeModule_Load("./libtcod.so");`);
+    stdout.writeln(`        }`);
     stdout.writeln("    } else {");
-    stdout.writeln(`        gTCODhandle = ExeModule_Load("libtcod_debug.dll");`);
-    stdout.writeln(`        if (!gTCODhandle) gTCODhandle = ExeModule_Load("libtcod.dll");`);
+    stdout.writeln(`        version (Tango) gTCODhandle = SharedLib.load("libtcod_debug.dll");`);
+    stdout.writeln(`        else gTCODhandle = ExeModule_Load("libtcod_debug.dll");`);
+    stdout.writeln(`        if (!gTCODhandle) {`);
+    stdout.writeln(`            version (Tango) gTCODhandle = SharedLib.load("libtcod.dll");`);
+    stdout.writeln(`            else gTCODhandle = ExeModule_Load("libtcod.dll");`);
+    stdout.writeln(`        }`); 
     stdout.writeln("    }");
     stdout.writeln("    assert(gTCODhandle);\n");
 
@@ -76,7 +100,7 @@ void main()
         }
         if (functionName.length == 0) throw new Exception("Malformed function line.");
 
-        stdout.writeln("    ", functionName, " = cast(typeof(", functionName, ")) ExeModule_GetSymbol(gTCODhandle, \"", functionName, "\");");
+        stdout.writeln("    ", functionName, " = cast(typeof(", functionName, ")) getSymbol(\"", functionName, "\");");
         stdout.writeln("    assert(", functionName, ");");
     }
 
