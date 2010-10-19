@@ -76,6 +76,6 @@ version (D_Version2) {
     version (Windows) alias wchar* wchar_tptr;
 }
 
-public import c.tcod.types;
-public import c.tcod.functions;
+public import tcod.c.types;
+public import tcod.c.functions;
 

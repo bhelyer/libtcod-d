@@ -2,7 +2,7 @@
  * Generate the tcod.functions module from a flat list of functions,
  * given on stdin. Output to stdout.
  *
- * This is not particularly general purpose; it makes a lot of 
+ * This is not particularly general purpose; it makes a lot of
  * assumptions about the function list that it will be given.
  */
 module genfunctionsmod;
@@ -29,7 +29,7 @@ void main()
     stdout.writeln("} else {");
     stdout.writeln(`    string gshared() { return " "; }`);
     stdout.writeln("}\n");
-    
+
     stdout.writeln("version (Tango) alias SharedLib SharedObject;");
     stdout.writeln("else alias HXModule SharedObject;\n");
 
@@ -48,7 +48,7 @@ void main()
     stdout.writeln();
 
     stdout.writeln("extern (D):\n");
-    
+
     stdout.writeln(`mixin("private " ~ gshared() ~ "SharedObject gTCODhandle;");`);
     stdout.writeln();
     stdout.writeln("private void* getSymbol(string name)");
@@ -83,7 +83,7 @@ void main()
     stdout.writeln(`        if (!gTCODhandle) {`);
     stdout.writeln(`            version (Tango) gTCODhandle = SharedLib.load("libtcod.dll");`);
     stdout.writeln(`            else gTCODhandle = ExeModule_Load("libtcod.dll");`);
-    stdout.writeln(`        }`); 
+    stdout.writeln(`        }`);
     stdout.writeln("    }");
     stdout.writeln("    assert(gTCODhandle);\n");
 
