@@ -1,6 +1,6 @@
-module c.tcod.types;
+module tcod.c.types;
 
-import c.tcod.all;
+import tcod.c.all;
 
 extern (C):
 
@@ -11,7 +11,7 @@ alias void* TCOD_list_t;
 // --- Colour ---
 struct TCOD_color_t {
 	ubyte r,g,b;
-} 
+}
 
 const int TCOD_COLOR_NB = 12;
 const int TCOD_COLOR_LEVELS = 6;
@@ -308,7 +308,7 @@ version (D_Version2) {
     {
         return (TCOD_BKGND_ALPH | (cast(ubyte)(alpha * 255) << 8));
     }
-    
+
     pure TCOD_bkgnd_flag_t TCOD_BKGND_ADDALPHA(T)(T alpha)
     {
         return (TCOD_BKGND_ADDA | (cast(ubyte)(alpha * 255) << 8));
@@ -319,7 +319,7 @@ version (D_Version2) {
     {
         return (TCOD_BKGND_ALPH | (cast(ubyte)(alpha * 255) << 8));
     }
-    
+
     TCOD_bkgnd_flag_t TCOD_BKGND_ADDALPHA(T)(T alpha)
     {
         return (TCOD_BKGND_ADDA | (cast(ubyte)(alpha * 255) << 8));
@@ -375,7 +375,7 @@ struct TCOD_mouse_t {
   bool mbutton_pressed;
   bool wheel_up;
   bool wheel_down;
-} 
+}
 
 // --- Bresenham. ---
 alias bool (*TCOD_line_listener_t) (int x, int y);
@@ -386,10 +386,10 @@ struct TCOD_bresenham_data_t {
 	int e;
 	int deltax;
 	int deltay;
-	int origx; 
-	int origy; 
-	int destx; 
-	int desty; 
+	int origx;
+	int origy;
+	int destx;
+	int desty;
 }
 
 // --- BSP. ---
@@ -399,7 +399,7 @@ struct TCOD_bsp_t {
 	int position; /* position of splitting */
 	ubyte level; /* level in the tree */
 	bool horizontal; /* horizontal splitting ? */
-} 
+}
 
 alias bool (*TCOD_bsp_callback_t)(TCOD_bsp_t *node, void *userData);
 
@@ -484,14 +484,14 @@ struct TCOD_lex_t {
 	const char *stringDelim;
 	bool javadoc_read;
 	bool allocBuf;
-	bool savept; // is this object a savepoint (no free in destructor)	
-} 
+	bool savept; // is this object a savepoint (no free in destructor)
+}
 
 
 // --- Parser. ---
 /* generic type */
 alias int TCOD_value_type_t;
-enum : TCOD_value_type_t { 
+enum : TCOD_value_type_t {
 	TCOD_TYPE_NONE,
 	TCOD_TYPE_BOOL,
 	TCOD_TYPE_CHAR,
@@ -533,7 +533,7 @@ enum : TCOD_value_type_t {
 	TCOD_TYPE_CUSTOM14,
 	TCOD_TYPE_CUSTOM15,
 	TCOD_TYPE_LIST=1024
-} 
+}
 
 /* dice roll */
 struct TCOD_dice_t {
@@ -541,7 +541,7 @@ struct TCOD_dice_t {
 	int nb_faces;
 	float multiplier;
 	float addsub;
-} 
+}
 
 /* generic value */
 union TCOD_value_t {
@@ -554,7 +554,7 @@ union TCOD_value_t {
 	TCOD_dice_t dice;
 	TCOD_list_t list;
 	void *custom;
-} 
+}
 
 /* parser structures */
 alias void *TCOD_parser_struct_t;
@@ -566,7 +566,7 @@ struct TCOD_parser_listener_t {
 	bool (*new_property)( charptr propname, TCOD_value_type_t type, TCOD_value_t value);
 	bool (*end_struct)(TCOD_parser_struct_t str,  charptr name);
 	void (*error)( charptr msg);
-} 
+}
 
 /* a custom type parser */
 alias TCOD_value_t (*TCOD_parser_custom_t)(TCOD_lex_t *lex, TCOD_parser_listener_t *listener, TCOD_parser_struct_t str, charptr propname);
@@ -586,7 +586,7 @@ struct TCOD_struct_int_t {
 	TCOD_list_t lists;
 	/* list of sub-structures */
 	TCOD_list_t structs;
-} 
+}
 
 /* the parser */
 struct TCOD_parser_int_t {
@@ -598,7 +598,7 @@ struct TCOD_parser_int_t {
 	bool fatal;
 	// list of properties if default listener is used
 	TCOD_list_t props;
-} 
+}
 
 
 // --- Tree. ---
@@ -613,7 +613,7 @@ struct TCOD_tree_t {
 struct TCOD_heightmap_t {
 	int w,h;
 	float *values;
-} 
+}
 
 
 // --- Zip. ---

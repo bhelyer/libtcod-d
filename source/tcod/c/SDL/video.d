@@ -2,7 +2,7 @@
  * Just enough SDL to use in the samples.
  * Probably shouldn't be used in any serious fashion.
  */
-module c.SDL.video;
+module SDL.c.video;
 
 alias ubyte Uint8;
 
@@ -52,7 +52,7 @@ struct SDL_PixelFormat
 struct private_hwdata;
 struct SDL_BlitMap;
 
-struct SDL_Surface 
+struct SDL_Surface
 {
     uint flags;
     SDL_PixelFormat* format;

@@ -1,5 +1,5 @@
 /// This module has been automatically generated.
-module c.tcod.functions;
+module tcod.c.functions;
 
 version (Tango) {
     import tango.sys.SharedLib;
