@@ -2,7 +2,13 @@ DMD=dmd
 DFLAGS=-gc -debug -w -unittest
 DLDFLAGS=-of$(EXE) -L-ldl
 EXE=samples_d
-LIBSRC=c/tcod/all.d c/tcod/types.d c/tcod/functions.d c/SDL/video.d
+
+TCOD_SOURCEDIR = ../source
+LIBSRC=\
+	$(TCOD_SOURCEDIR)/tcod/c/all.d \
+	$(TCOD_SOURCEDIR)/tcod/c/types.d \
+	$(TCOD_SOURCEDIR)/tcod/c/functions.d \
+	$(TCOD_SOURCEDIR)/sdl/c/video.d
 
 $(EXE) : samples_d.d $(LIBSRC)
 	$(DMD) samples_d.d $(LIBSRC) $(DFLAGS) $(DLDFLAGS)

@@ -11,8 +11,8 @@ import std.conv;
 import std.c.stdlib : malloc, free, exit;
 import std.c.string;
 
-import c.tcod.all;
-import c.SDL.video;
+import sdl.c.video;
+import tcod.c.all;
 
 version (D_Version2) {
     Mt19937 gen;

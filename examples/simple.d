@@ -1,6 +1,6 @@
 module simple;
 
-import c.tcod.all;
+import tcod.c.all;
 
 
 void main()

@@ -2,7 +2,7 @@
  * Just enough SDL to use in the samples.
  * Probably shouldn't be used in any serious fashion.
  */
-module SDL.c.video;
+module sdl.c.video;
 
 alias ubyte Uint8;
 
