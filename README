@@ -38,3 +38,28 @@ http://code.google.com/p/libtcod-d
 
 or email me at b (dot) helyer (at) gmail (dot) com.
 
+=========================
+Developing with libtcod-d
+=========================
+
+The libtcod-d code is maintained in a Git repository at github.org.
+If you are also using Git for your own project, you should consider
+using "git submodule" to add the libtcod-d repository as submodule
+under your project. If you have experience with svn externals, git 
+submodules are a similar feature.
+ 
+Git submodules allow your repository to point at a single, static point
+in a separate repository as a child element. This avoids having to 
+copy the code into your repo, etc.
+
+Git submodules use a frozen point - not "HEAD" or any of the branch 
+heads - so that you can develop against a stable background. If you
+want to update the submodule to a later version of its own code, you 
+have to do that explicitly. This keeps your environment stable until
+you ask for it to change.
+
+Of course, the best reason for using submodules is that you can clone
+the libtcod-d repository on github (or somewhere else), point your 
+submodule at your clone, and make updates to the libtcod-d sources
+within the submodule directory. Then you can contribute to libtcod-d
+by pushing your changes back upstream. :)
