@@ -6,8 +6,8 @@ version (Tango) {
     import tango.stdc.stringz;
 } else import std.loader;
 
-import c.tcod.all;
-import c.tcod.types;
+import tcod.c.all;
+import tcod.c.types;
 
 version (D_Version2) {
     string gshared() { return "__gshared "; }

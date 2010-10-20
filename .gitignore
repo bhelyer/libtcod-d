@@ -1,5 +1,6 @@
-samples_d
 *.o
+*.obj
 a.out
+*.exe
 genfunctionsmod
 
