@@ -1588,7 +1588,7 @@ void main(string[] args)
                     nb_char_horiz = toInt(args[++argn]);
                     nb_char_vertic = toInt(args[++argn]);
                 }
-            } catch (ConvError e) {
+            } catch (ConvException e) {
                 nb_char_horiz = 0;
                 nb_char_vertic = 0;
             }
@@ -1603,7 +1603,7 @@ void main(string[] args)
                     fullscreen_width = toInt(args[++argn]);
                     fullscreen_height = toInt(args[++argn]);
                 }
-            } catch (ConvError e) {
+            } catch (ConvException e) {
                 fullscreen_width = 0;
                 fullscreen_height = 0;
             }
