@@ -350,7 +350,7 @@ alias void* TCOD_thread_t;
 alias void* TCOD_semaphore_t;
 alias void* TCOD_mutex_t;
 alias void* TCOD_cond_t;
-alias void (*SDL_renderer_t) (void* sdl_surface);
+alias void function(void* sdl_surface) SDL_renderer_t;
 
 // --- Mersenne. ---
 alias void* TCOD_random_t;
@@ -378,7 +378,7 @@ struct TCOD_mouse_t {
 }
 
 // --- Bresenham. ---
-alias bool (*TCOD_line_listener_t) (int x, int y);
+alias bool function(int x, int y) TCOD_line_listener_t;
 
 struct TCOD_bresenham_data_t {
 	int stepx;
@@ -401,7 +401,7 @@ struct TCOD_bsp_t {
 	bool horizontal; /* horizontal splitting ? */
 }
 
-alias bool (*TCOD_bsp_callback_t)(TCOD_bsp_t *node, void *userData);
+alias bool function(TCOD_bsp_t* node, void* userData) TCOD_bsp_callback_t;
 
 // --- Noise. ---
 alias void* TCOD_noise_t;
@@ -441,7 +441,7 @@ enum : TCOD_fov_algorithm_t {
 TCOD_fov_algorithm_t FOV_PERMISSIVE(int x) { return FOV_PERMISSIVE_0 + x; }
 
 // --- Path. ---
-alias float (*TCOD_path_func_t)( int xFrom, int yFrom, int xTo, int yTo, void *user_data );
+alias float function(int xFrom, int yFrom, int xTo, int yTo, void* user_data) TCOD_path_func_t;
 alias void *TCOD_path_t;
 alias void* TCOD_dijkstra_t;
 
@@ -561,15 +561,15 @@ alias void *TCOD_parser_struct_t;
 
 /* parser listener */
 struct TCOD_parser_listener_t {
-	bool (*new_struct)(TCOD_parser_struct_t str, charptr name);
-	bool (*new_flag)( charptr name);
-	bool (*new_property)( charptr propname, TCOD_value_type_t type, TCOD_value_t value);
-	bool (*end_struct)(TCOD_parser_struct_t str,  charptr name);
-	void (*error)( charptr msg);
+	bool function(TCOD_parser_struct_t str, charptr name) new_struct;
+	bool function(charptr name) new_flag;
+	bool function(charptr propname, TCOD_value_type_t type, TCOD_value_t value) new_property;
+	bool function(TCOD_parser_struct_t str,  charptr name) end_struct;
+	void function(charptr msg) error;
 }
 
 /* a custom type parser */
-alias TCOD_value_t (*TCOD_parser_custom_t)(TCOD_lex_t *lex, TCOD_parser_listener_t *listener, TCOD_parser_struct_t str, charptr propname);
+alias TCOD_value_t function(TCOD_lex_t* lex, TCOD_parser_listener_t* listener, TCOD_parser_struct_t str, charptr propname) TCOD_parser_custom_t;
 
 /* the parser */
 alias void *TCOD_parser_t;
