@@ -1432,6 +1432,7 @@ void blur(SDL_Surface *screen, int samplex, int sampley, int samplew, int sample
 					ig += p[gidx];
 					ib += p[bidx];
 					p += 2*screen.pitch;
+                    goto case 3;
 				case 3:
 					count += 4;
 					// get pixel at x,y
@@ -1451,6 +1452,7 @@ void blur(SDL_Surface *screen, int samplex, int sampley, int samplew, int sample
 					ig += p[gidx];
 					ib += p[bidx];
 					p -= 2*screen.pitch;
+                    goto case 2;
 				case 2:
 					count += 4;
 					// get pixel at x,y
@@ -1470,6 +1472,7 @@ void blur(SDL_Surface *screen, int samplex, int sampley, int samplew, int sample
 					ig += p[gidx];
 					ib += p[bidx];
 					p += screen.pitch;
+                    goto case 1;
 				case 1:
 					count += 4;
 					// get pixel at x,y
@@ -1558,7 +1561,7 @@ class SDLCallbackSample : Sample
 
 void main(string[] args)
 {
-    int cur_sample = 0;  // Index of the current sample.
+    size_t cur_sample = 0;  // Index of the current sample.
     bool first = true;  // First time we render a sample.
     string font = "data/fonts/consolas10x10_gs_tc.png";
     int font_flags = TCOD_FONT_TYPE_GREYSCALE | TCOD_FONT_LAYOUT_TCOD;
@@ -1649,7 +1652,7 @@ void main(string[] args)
                 TCOD_console_set_background_color(null, TCOD_black);
             }
             // Print the sample name.
-            TCOD_console_print_left(null, 2, 46 - (samples.length - i),
+            TCOD_console_print_left(null, 2, cast(uint)(46 - (samples.length - i)),
                                     TCOD_BKGND_SET,
                                     toStringz(sample.name()));
         }
