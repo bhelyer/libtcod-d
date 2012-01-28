@@ -23,6 +23,15 @@ GDC is not supported, and won't work due to the age of the FE.
 ATTENTION: There is a bug that occurs when using D2 versions on some
 systems that means any attempt to use the library will result in a
 segfaulting executable. I'm looking into it.
+---
+One and a half years later, I've picked this up again after simendsjo
+fixed some errors when compiling with the latest DMD. The samples_d is 
+still segfaulting. And it only gets that far with libtcod_debug.so, as
+the libtcod_text_* functions are only present there.
+Furthermore, 1.5.1 has been in limbo for a long time. I am continuing to
+work on this when I can, but there are a lot of issues to work through.
+-Bernard 29/1/12.
+---
 
 To try the sample, run make -f makefile-d-sample on Linux, or run 
 build_sample.bat on Windows.
@@ -32,10 +41,7 @@ documentation for more details. If I can get motivated, an object
 wrapper that would be similar to the C++ API may be forthcoming, so watch
 this space.
 
-For comments complaints and downloads, refer to the Google Code page:
-
-http://code.google.com/p/libtcod-d
-
+For comments and complaints, use the issue system on GitHub.
 or email me at b (dot) helyer (at) gmail (dot) com.
 
 =========================
