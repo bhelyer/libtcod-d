@@ -8,7 +8,7 @@
 module genfunctionsmod;
 
 import std.stdio;
-import std.ctype;
+import std.ascii : isWhite;
 import std.string;
 
 
@@ -115,7 +115,7 @@ bool emptyOrWhitespace(T)(T s)
 {
     bool emptyOrWhite = true;
     foreach (c; s) {
-        if (!isspace(c)) {
+        if (!isWhite(c)) {
             emptyOrWhite = false;
             break;
         }
