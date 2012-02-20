@@ -65,7 +65,7 @@ class ColoursSample : Sample
     string name() { return "  True colors        "; }
     void render(bool first, ref TCOD_key_t key)
     {
-        enum { TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT };
+        enum { TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT }
         // Random corner colours.
         static TCOD_color_t[4] cols = [{50,40,150},{240,85,5},{50,35,240},{10,200,130}];
         static int[4] dirr = [1, -1, 1, 1], dirg = [1, -1, -1, 1], dirb = [1, 1, 1, -1];
