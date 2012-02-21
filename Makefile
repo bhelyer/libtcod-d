@@ -1,4 +1,7 @@
 # Gnu make Makefile for libtcod-d
+
+DMD = dmd
+
 ifeq ""      '$(COMSPEC)'
 
 	Platform := Unix
@@ -31,6 +34,12 @@ endef
 $(error $(message))
 endif
 
+# For now, 32 bit is the default model
+# PS: copied from phobos
+ifeq (,$(MODEL))
+	MODEL:=32
+endif
+
 functions.d_gen := source/tcod/c/functions.d
 generated_sources := $(functions.d_gen)
 
@@ -41,7 +50,7 @@ genfuncs.d := source/genfunctionsmod.d
 function_list.txt := source/functionlist.txt
 
 $(functions.d_gen) : $(genfuncs.d) $(function_list.txt)
-	dmd -run $(genfuncs.d) \
+	$(DMD) -m$(MODEL) -run $(genfuncs.d) \
 		< $(function_list.txt) \
 		> $@
 

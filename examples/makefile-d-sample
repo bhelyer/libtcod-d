@@ -1,5 +1,6 @@
 DMD=dmd
-DFLAGS=-gc -debug -w -unittest
+MODEL=32
+DFLAGS=-m$(MODEL) -gc -debug -w -unittest
 DLDFLAGS=-of$(EXE) -L-ldl
 EXE=samples_d
 
